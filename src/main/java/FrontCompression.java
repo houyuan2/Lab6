@@ -1,4 +1,5 @@
 import java.io.File;
+import java.math.*;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -44,8 +45,19 @@ public class FrontCompression {
         /*
          * Complete this function.
          */
-
-        return "";
+        String[] text = corpus.split("\n");
+        String[] output = new String[text.length];
+        for (int i = 0; i < text.length; i++) {
+            if (i == 0) {
+                output[0] = "0 " + text[0];
+            } else {
+                String firstString = text[i - 1];
+                String secondString = text[i];
+                int prefix = longestPrefix(firstString, secondString);
+                output[i] = prefix + " " + text[i].substring(prefix);
+            }
+        }
+        return String.join("\n", output);
     }
 
     /**
@@ -67,8 +79,20 @@ public class FrontCompression {
         /*
          * Complete this function.
          */
-
-        return "";
+        String[] text = corpus.split("\n");
+        String[] output = new String[text.length];
+        for (int i = 0; i < text.length; i++) {
+            int spaceIndex = text[i].indexOf(' ');
+            int prefix = Integer.parseInt(text[i].substring(0, spaceIndex));
+            if (prefix == 0 || i == 0) {
+                output[i] = text[i].substring(spaceIndex + 1);
+            } else {
+                String firstString = output[i - 1];
+                String secondString = text[i];
+                output[i] = firstString.substring(0, prefix) + secondString.substring(spaceIndex + 1);
+            }
+        }
+        return String.join("\n", output);
     }
 
     /**
@@ -82,7 +106,20 @@ public class FrontCompression {
         /*
          * Complete this function.
          */
-        return 0;
+        int count = 0;
+        int len = 0;
+        if (firstString.length() < secondString.length()) {
+            len = firstString.length();
+        } else {
+                len = secondString.length();
+        }
+        for (int i = 0; i < len; i++) {
+            if (firstString.charAt(i) == secondString.charAt(i)) {
+                count++;
+            } else {
+                break;
+            }
+        } return count;
     }
 
     /**
@@ -109,6 +146,7 @@ public class FrontCompression {
 
         String originalWords = words;
         String compressedWords = compress(words);
+        System.out.println(compressedWords);
         String decompressedWords = decompress(compressedWords);
 
         if (decompressedWords.equals(originalWords)) {
